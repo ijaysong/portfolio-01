@@ -1,0 +1,35 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+
+<head>
+	<title>Home</title>
+	<meta charset="UTF-8" />
+	
+	<style>
+      table {
+        width: 100%;
+        border-collapse : collapse
+      }
+      th, td {
+      	border : 1px solid black
+      }
+    </style>
+</head>
+
+<body>
+	<h1>코로나19(COVID-19) 세계 현황</h1>
+	
+	<table>
+		<tr>
+			<th>국가</th>
+			<th>확진환자</th>
+			<th>사망자</th>
+			<th>격리해제</th>
+		</tr>
+		<tr th:each="row : ${worldList}">
+			<td><a th:text="${row.country}" th:href="@{/{id}(id=${row.country})}"></a></td>
+			<td th:text="${row.confirmed}"></td>
+			<td th:text="${row.deaths}"></td>
+			<td th:text="${row.recovered}"></td>
+		</tr>
+	</table>
+</body>
