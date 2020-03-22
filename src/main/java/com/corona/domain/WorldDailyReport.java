@@ -6,17 +6,9 @@ public class WorldDailyReport {
 	private int confirmed;
 	private int deaths;
 	private int recovered;
+	private String updatedDate;
 	
 	public WorldDailyReport() {}
-
-	public WorldDailyReport(int id, String country, int confirmed, int deaths, int recovered) {
-		super();
-		this.id = id;
-		this.country = country;
-		this.confirmed = confirmed;
-		this.deaths = deaths;
-		this.recovered = recovered;
-	}
 
 	public int getId() {
 		return id;
@@ -57,6 +49,19 @@ public class WorldDailyReport {
 	public void setRecovered(int recovered) {
 		this.recovered = recovered;
 	}
-	
+
+	public String getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(String updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	@Override
+	public String toString() {
+		return "WorldDailyReport [id=" + id + ", country=" + country + ", confirmed=" + confirmed + ", deaths=" + deaths
+				+ ", recovered=" + recovered + ", updatedDate=" + updatedDate + "]";
+	}
 	
 }

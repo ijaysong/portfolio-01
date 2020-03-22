@@ -1,19 +1,24 @@
 package com.corona.component;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.corona.domain.WorldDailyReport;
-import com.corona.service.CoronaService;
+import com.corona.service.WorldDailyReportService;
+import com.opencsv.CSVReader;
 
 /**
  * Crawler
@@ -22,8 +27,12 @@ import com.corona.service.CoronaService;
 @Component
 public class Crawler {
 	
+	private static Logger logger = LoggerFactory.getLogger(Crawler.class);
+	
+	private static String current_datetime;
+	
 	/** 존스홉킨스 코로나 CSV URL **/
-	private static final String CONN_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/01-22-2020.csv";
+	private static final String CONN_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-21-2020.csv";
 	
 	private static final int COUNTRY_FIELD = 1;
 	
@@ -33,21 +42,33 @@ public class Crawler {
 	
 	private static final int RECOVERED_FIELD = 5;
 	
+	
 	@Autowired
-	CoronaService service;
+	WorldDailyReportService service;
 
+	// 매일 9시에 CronJob을 실행한다
     @Scheduled(cron = "0 0 9 * * *")
     public void cronJobSchedule() {
-        // 매일 9시에 CronJob을 실행한다
+    	logger.info("Execute Crawler");
+    	
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+    	LocalDate today = LocalDate.now();
+    	current_datetime = formatter.format(today).toString();
+    	
     	List<WorldDailyReport> info = execCrawling();
     	insertCsvData(info);
     }
     
     public List<WorldDailyReport> execCrawling() {
     	List<WorldDailyReport> result = new ArrayList<>();
+    	
+    	Map<String, Integer> confirmedMap = new HashMap<>();
+    	Map<String, Integer> deathsMap = new HashMap<>();
+    	Map<String, Integer> recoveredMap = new HashMap<>();
+    	
+    	CSVReader reader = null;
     	// 1. HTML 가져오기 
     	try {
-			
     		URL u = new URL(CONN_URL);
     		HttpURLConnection http = (HttpURLConnection)u.openConnection();
     		http.setRequestMethod("GET");
@@ -55,27 +76,38 @@ public class Crawler {
     		if (200 > http.getResponseCode() && http.getResponseCode() > 299) {
     			return result;
     		} 
+    		reader = new CSVReader(new InputStreamReader(http.getInputStream()));
+    		reader.readNext();
     		
-    		BufferedReader br = new BufferedReader(new InputStreamReader(http.getInputStream()));
-    		br.readLine(); // 한 줄 스킵함
-    		
-    		String line;
-    		while((line = br.readLine() ) != null){
-    			String[] splitted = line.split(",", 6);
+    		String[] line;
+    		while((line = reader.readNext()) != null){
     			
-    			int confirmed = "".equals(splitted[CONFIRMED_FIELD]) ? 0 : Integer.parseInt(splitted[CONFIRMED_FIELD]);
-    			int deaths = "".equals(splitted[DEATHS_FIELD]) ? 0 : Integer.parseInt(splitted[DEATHS_FIELD]);
-    			int recovered = "".equals(splitted[RECOVERED_FIELD]) ? 0 : Integer.parseInt(splitted[RECOVERED_FIELD]);
+    			String country = line[COUNTRY_FIELD];
+    			int confirmed = "".equals(line[CONFIRMED_FIELD]) ? 0 : Integer.parseInt(line[CONFIRMED_FIELD]);
+    			int deaths = "".equals(line[DEATHS_FIELD]) ? 0 : Integer.parseInt(line[DEATHS_FIELD]);
+    			int recovered = "".equals(line[RECOVERED_FIELD]) ? 0 : Integer.parseInt(line[RECOVERED_FIELD]);
     			
-    			WorldDailyReport c = new WorldDailyReport();
-    			c.setCountry(splitted[COUNTRY_FIELD]);
-    			c.setConfirmed(confirmed);
-    			c.setDeaths(deaths);
-    			c.setRecovered(recovered);
-    			
-    			result.add(c);
+    			if(confirmedMap.containsKey(country)) {
+    				confirmedMap.put(country, confirmedMap.get(country)+confirmed);
+    				deathsMap.put(country, deathsMap.get(country)+deaths);
+    				recoveredMap.put(country, recoveredMap.get(country)+recovered);
+    			} else {
+    				confirmedMap.put(country, confirmed);
+    				deathsMap.put(country, deaths);
+    				recoveredMap.put(country, recovered);
+    			}
     		}
-
+    		
+    		for(String key : confirmedMap.keySet()) {
+    			WorldDailyReport report = new WorldDailyReport();
+    			report.setCountry(key);
+    			report.setConfirmed(confirmedMap.get(key));
+    			report.setDeaths(deathsMap.get(key));
+    			report.setRecovered(recoveredMap.get(key));
+    			
+    			result.add(report);
+    		}
+    		
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -83,6 +115,6 @@ public class Crawler {
     }
     
     public void insertCsvData(List<WorldDailyReport> info) {
-    	service.insertFile(info);
+    	service.insertWorldList(info);
     }
 }

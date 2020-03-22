@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.corona.component.Crawler;
 import com.corona.domain.WorldDailyReport;
-import com.corona.service.CoronaService;
+import com.corona.service.WorldDailyReportService;
 
 @Controller
 public class HomeController {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	@Autowired
-	private CoronaService service;
+	private WorldDailyReportService service;
 	
 	@Autowired
 	private Crawler c;

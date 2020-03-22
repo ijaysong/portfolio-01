@@ -1,19 +1,18 @@
 package com.corona.service;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.corona.domain.WorldDailyReport;
-import com.corona.mapper.CoronaMapper;
+import com.corona.mapper.WorldDailyReportMapper;
 
 @Service
-public class CoronaServiceImpl implements CoronaService {
+public class WorldDailyReportServiceImpl implements WorldDailyReportService {
 	
 	@Autowired
-	private CoronaMapper mapper;
+	private WorldDailyReportMapper mapper;
 
 	@Override
 	public List<WorldDailyReport> getWorldList() {
@@ -22,8 +21,8 @@ public class CoronaServiceImpl implements CoronaService {
 	}
 
 	@Override
-	public void insertData(List<WorldDailyReport> info) {
-		return mapper.insertData(info);
+	public void insertWorldList(List<WorldDailyReport> info) {
+		mapper.insertWorldList(info);
 	}
 
 }

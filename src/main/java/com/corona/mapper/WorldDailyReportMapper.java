@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.corona.domain.WorldDailyReport;
 
 @Mapper
-public interface CoronaMapper {
+public interface WorldDailyReportMapper {
 	public List<WorldDailyReport> getWorldList();
-	public void insertData(List<WorldDailyReport> info);
+	public void insertWorldList(List<WorldDailyReport> info);
 }

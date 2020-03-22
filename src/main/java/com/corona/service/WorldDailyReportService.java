@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.corona.domain.WorldDailyReport;
 
-public interface CoronaService {
+public interface WorldDailyReportService {
 	public List<WorldDailyReport> getWorldList();
-	public void insertData(List<WorldDailyReport> info);
+	public void insertWorldList(List<WorldDailyReport> info);
 }
