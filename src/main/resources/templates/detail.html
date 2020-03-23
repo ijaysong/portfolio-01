@@ -20,13 +20,15 @@
 	
 	<table>
 		<tr>
-			<th>국가</th>
+			<th>No.</th>
+			<th>날짜</th>
 			<th>확진환자</th>
 			<th>사망자</th>
 			<th>격리해제</th>
 		</tr>
 		<tr th:each="row : ${worldList}">
-			<td><a th:text="${row.country}" th:href="@{/{id}(id=${row.country})}"></a></td>
+			<td th:text="${row.num}"></td>
+			<td th:text="${row.updatedDate}"></td>
 			<td th:text="${row.confirmed}"></td>
 			<td th:text="${row.deaths}"></td>
 			<td th:text="${row.recovered}"></td>

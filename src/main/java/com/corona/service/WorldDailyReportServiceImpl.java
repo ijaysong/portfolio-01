@@ -25,4 +25,9 @@ public class WorldDailyReportServiceImpl implements WorldDailyReportService {
 		mapper.insertWorldList(info);
 	}
 
+	@Override
+	public List<WorldDailyReport> getDetailList(String country) {
+		return mapper.getDetailList(country);
+	}
+
 }

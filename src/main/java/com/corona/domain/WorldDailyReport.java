@@ -1,7 +1,7 @@
 package com.corona.domain;
 
 public class WorldDailyReport {
-	private int id;
+	private int num;
 	private String country;
 	private int confirmed;
 	private int deaths;
@@ -10,12 +10,12 @@ public class WorldDailyReport {
 	
 	public WorldDailyReport() {}
 
-	public int getId() {
-		return id;
+	public int getNum() {
+		return num;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setNum(int num) {
+		this.num = num;
 	}
 
 	public String getCountry() {
@@ -60,7 +60,7 @@ public class WorldDailyReport {
 
 	@Override
 	public String toString() {
-		return "WorldDailyReport [id=" + id + ", country=" + country + ", confirmed=" + confirmed + ", deaths=" + deaths
+		return "WorldDailyReport [num=" + num + ", country=" + country + ", confirmed=" + confirmed + ", deaths=" + deaths
 				+ ", recovered=" + recovered + ", updatedDate=" + updatedDate + "]";
 	}
 	

@@ -29,10 +29,12 @@ public class Crawler {
 	
 	private static Logger logger = LoggerFactory.getLogger(Crawler.class);
 	
-	private static String current_datetime;
+	private static String current_datetime = "";
 	
 	/** 존스홉킨스 코로나 CSV URL **/
-	private static final String CONN_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-21-2020.csv";
+	private static final String CONN_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/";
+	
+	private static final String EXTENSION = ".csv";
 	
 	private static final int COUNTRY_FIELD = 1;
 	
@@ -47,12 +49,12 @@ public class Crawler {
 	WorldDailyReportService service;
 
 	// 매일 9시에 CronJob을 실행한다
-    @Scheduled(cron = "0 0 9 * * *")
+    @Scheduled(cron = "0 23 * * * *")
     public void cronJobSchedule() {
     	logger.info("Execute Crawler");
     	
     	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-    	LocalDate today = LocalDate.now();
+    	LocalDate today = LocalDate.now().minusDays(1);
     	current_datetime = formatter.format(today).toString();
     	
     	List<WorldDailyReport> info = execCrawling();
@@ -69,7 +71,7 @@ public class Crawler {
     	CSVReader reader = null;
     	// 1. HTML 가져오기 
     	try {
-    		URL u = new URL(CONN_URL);
+    		URL u = new URL(CONN_URL+current_datetime+EXTENSION);
     		HttpURLConnection http = (HttpURLConnection)u.openConnection();
     		http.setRequestMethod("GET");
     		

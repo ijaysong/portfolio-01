@@ -10,4 +10,5 @@ import com.corona.domain.WorldDailyReport;
 public interface WorldDailyReportMapper {
 	public List<WorldDailyReport> getWorldList();
 	public void insertWorldList(List<WorldDailyReport> info);
+	public List<WorldDailyReport> getDetailList(String country);
 }

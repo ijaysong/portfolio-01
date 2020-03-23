@@ -5,14 +5,18 @@
 
 	<select id="getWorldList" resultType="WorldDailyReport">
 		SELECT
-			COUNTRY
-			, CONFIRMED
-			, DEATHS
-			, RECOVERED
+			@rownum:=@rownum+1 AS NUM
+			, A.COUNTRY
+			, A.CONFIRMED
+			, A.DEATHS
+			, A.RECOVERED
+			, DATE_FORMAT(A.UPDATED_DATE, '%m.%d 00:00') AS UPDATEDDATE
 		FROM
-			DEV_CORONA.WORLD_DAILY
+			DEV_CORONA.WORLD_DAILY A, (SELECT @rownum:=0) B
+		WHERE
+			DATE_FORMAT(A.UPDATED_DATE, '%y%m%d') = DATE_FORMAT(NOW(), '%y%m%d')
 		ORDER BY
-			CONFIRMED DESC
+			A.CONFIRMED DESC
 	</select>
 	
 	<insert id="insertWorldList" parameterType="java.util.List">
@@ -34,4 +38,19 @@
 		)
 	    </foreach>
 	</insert>
+	
+	<select id="getDetailList" resultType="WorldDailyReport">
+		SELECT
+			@rownum:=@rownum+1 AS NUM
+			, DATE_FORMAT(A.UPDATED_DATE, '%Y-%m-%d') AS UPDATEDDATE
+			, A.CONFIRMED
+			, A.DEATHS
+			, A.RECOVERED
+		FROM
+			DEV_CORONA.WORLD_DAILY A, (SELECT @rownum:=0) B
+		WHERE
+			A.COUNTRY = #{COUNTRY}
+		ORDER BY
+			A.UPDATED_DATE DESC
+	</select>
 </mapper>
