@@ -11,4 +11,6 @@ public interface WorldDailyReportMapper {
 	public List<WorldDailyReport> getWorldList();
 	public void insertWorldList(List<WorldDailyReport> info);
 	public List<WorldDailyReport> getDetailList(String country);
+	public List<String> getCountryList();
+	public void addCountryList(List<String> countryList);
 }

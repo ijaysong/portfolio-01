@@ -21,12 +21,12 @@
 	
 	<insert id="insertWorldList" parameterType="java.util.List">
 		INSERT INTO
-			dev_corona.world_daily
+			DEV_CORONA.WORLD_DAILY
 		(
-			country
-			, confirmed
-			, deaths
-			, recovered
+			COUNTRY
+			, CONFIRMED
+			, DEATHS
+			, RECOVERED
 		)
 		VALUES
 		<foreach collection="list" item="item" separator=" , " >
@@ -46,11 +46,36 @@
 			, A.CONFIRMED
 			, A.DEATHS
 			, A.RECOVERED
+			, DATE_FORMAT(A.UPDATED_DATE, '%m.%d 00:00') AS UPDATEDDATE
 		FROM
 			DEV_CORONA.WORLD_DAILY A, (SELECT @rownum:=0) B
 		WHERE
 			A.COUNTRY = #{COUNTRY}
 		ORDER BY
 			A.UPDATED_DATE DESC
+		LIMIT 30
 	</select>
+	
+	<select id="getCountryList" resultType="string">
+		SELECT
+			ENGLISH_NM
+		FROM 
+			DEV_CORONA.COUNTRY_INFO
+		ORDER BY
+			ID
+	</select>
+	
+	<insert id="addCountryList" parameterType="java.util.List">
+		INSERT INTO
+			DEV_CORONA.COUNTRY_INFO
+		(
+			ENGLISH_NM
+		)
+		VALUES
+		<foreach collection="list" item="item" separator=" , " >
+		(
+			#{item}
+		)
+	    </foreach>
+	</insert>
 </mapper>

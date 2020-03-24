@@ -17,7 +17,7 @@
 
 <body>
 	<h1>코로나19(COVID-19) 세계 현황</h1>
-	<h4 th:text="${updatedDate}">기준</h4>
+	<h4 th:inline="text">[[${updatedDate}]] 기준</h4>
 	<div>출처: 존스홉킨스 의대 Daily Report</div><br>
 	<table>
 		<tr>

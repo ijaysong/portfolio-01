@@ -8,8 +8,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,20 +39,20 @@ public class Crawler {
 	
 	private static final String EXTENSION = ".csv";
 	
-	private static final int COUNTRY_FIELD = 1;
+	private static int COUNTRY_FIELD;
 	
-	private static final int CONFIRMED_FIELD = 3;
+	private static int CONFIRMED_FIELD;
 	
-	private static final int DEATHS_FIELD = 4;
+	private static int DEATHS_FIELD;
 	
-	private static final int RECOVERED_FIELD = 5;
+	private static int RECOVERED_FIELD;
 	
 	
 	@Autowired
 	WorldDailyReportService service;
 
 	// 매일 9시에 CronJob을 실행한다
-    @Scheduled(cron = "0 23 * * * *")
+    @Scheduled(cron = "0 11 * * * *")
     public void cronJobSchedule() {
     	logger.info("Execute Crawler");
     	
@@ -58,10 +61,11 @@ public class Crawler {
     	current_datetime = formatter.format(today).toString();
     	
     	List<WorldDailyReport> info = execCrawling();
+    	insertCountry(info);
     	insertCsvData(info);
     }
     
-    public List<WorldDailyReport> execCrawling() {
+	public List<WorldDailyReport> execCrawling() {
     	List<WorldDailyReport> result = new ArrayList<>();
     	
     	Map<String, Integer> confirmedMap = new HashMap<>();
@@ -79,7 +83,29 @@ public class Crawler {
     			return result;
     		} 
     		reader = new CSVReader(new InputStreamReader(http.getInputStream()));
-    		reader.readNext();
+    		String[] header = reader.readNext();
+    		
+    		for(int i = 0; i < header.length; i++) {
+    			switch(header[i]){
+	    			case "Country/Region":
+	    				COUNTRY_FIELD = i;
+	    				break;
+	    			case "Country_Region":
+	    				COUNTRY_FIELD = i;
+	    				break;
+	    			case "Confirmed":
+	    				CONFIRMED_FIELD = i;
+	    				break;
+	    			case "Deaths":
+	    				DEATHS_FIELD = i;
+	    				break;
+	    			case "Recovered":
+	    				RECOVERED_FIELD = i;
+	    				break;
+	    			default:
+	    				break;
+    			}
+    		}
     		
     		String[] line;
     		while((line = reader.readNext()) != null){
@@ -117,6 +143,40 @@ public class Crawler {
     }
     
     public void insertCsvData(List<WorldDailyReport> info) {
+    	List<String> countryList = service.getCountryList();
+    	List<WorldDailyReport> insertList = new ArrayList<>();
+    	
+    	for(WorldDailyReport target : info) {
+    		String country = target.getCountry();
+    		
+    		for(int i = 0; i < countryList.size(); i++) {
+    			if(country.equals(countryList.get(i))) target.setCountry(Integer.toString(i+1));
+    		}
+    		insertList.add(target);
+    	}
     	service.insertWorldList(info);
     }
+    
+    private void insertCountry(List<WorldDailyReport> info) {
+    	List<String> insertList = new ArrayList<>();
+    	List<String> countryList = service.getCountryList();
+    	
+    	if(countryList.size() > 0) {
+    		
+    		Set<String> countrySet = new HashSet<>(countryList);
+    		
+    		for(WorldDailyReport target : info) {
+    			String country = target.getCountry();
+    			
+    			if(!countrySet.contains(country)) {
+    				// Country 테이블에 해당 국가명이 존재하지 않는다면,
+    				insertList.add(country);
+    			}
+    		}
+    		
+    		if(insertList.size() > 0) {
+    			service.addCountryList(insertList);
+    		}
+    	}
+	}
 }

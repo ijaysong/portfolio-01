@@ -1,7 +1,7 @@
 package com.corona.domain;
 
 public class WorldDailyReport {
-	private int num;
+	private int num; // index
 	private String country;
 	private int confirmed;
 	private int deaths;

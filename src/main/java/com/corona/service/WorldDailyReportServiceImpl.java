@@ -30,4 +30,14 @@ public class WorldDailyReportServiceImpl implements WorldDailyReportService {
 		return mapper.getDetailList(country);
 	}
 
+	@Override
+	public List<String> getCountryList() {
+		return mapper.getCountryList();
+	}
+
+	@Override
+	public void addCountryList(List<String> countryList) {
+		mapper.addCountryList(countryList);
+	}
+
 }

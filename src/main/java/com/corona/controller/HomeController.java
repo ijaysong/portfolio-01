@@ -28,16 +28,20 @@ public class HomeController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Model model) {
 		List<WorldDailyReport> result = service.getWorldList();
-		model.addAttribute("worldList", result);
 		
+		model.addAttribute("worldList", result);
 		model.addAttribute("updatedDate", result.get(0).getUpdatedDate());
+		
 		return "home";
 	}
 	
 	@RequestMapping(value="/{country}", method = RequestMethod.GET)
 	public String detail(@PathVariable("country")String country, Model model) {
 		List<WorldDailyReport> result = service.getDetailList(country);
+		
 		model.addAttribute("worldList", result);
+		model.addAttribute("updatedDate", result.get(0).getUpdatedDate());
+		
 		return "detail";
 	}
 	
