@@ -35,8 +35,8 @@ public class HomeController {
 		return "home";
 	}
 	
-	@RequestMapping(value="/{country}", method = RequestMethod.GET)
-	public String detail(@PathVariable("country")String country, Model model) {
+	@RequestMapping(value="/{countryId}", method = RequestMethod.GET)
+	public String detail(@PathVariable("countryId")String country, Model model) {
 		List<WorldDailyReport> result = service.getDetailList(country);
 		
 		model.addAttribute("worldList", result);

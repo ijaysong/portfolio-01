@@ -1,8 +1,9 @@
 package com.corona.domain;
 
 public class WorldDailyReport {
-	private int num; // index
-	private String country;
+	private int num;
+	private int countryId;
+	private String countryName;
 	private int confirmed;
 	private int deaths;
 	private int recovered;
@@ -18,12 +19,20 @@ public class WorldDailyReport {
 		this.num = num;
 	}
 
-	public String getCountry() {
-		return country;
+	public int getCountryId() {
+		return countryId;
 	}
 
-	public void setCountry(String country) {
-		this.country = country;
+	public void setCountryId(int countryId) {
+		this.countryId = countryId;
+	}
+
+	public String getCountryName() {
+		return countryName;
+	}
+
+	public void setCountryName(String countryName) {
+		this.countryName = countryName;
 	}
 
 	public int getConfirmed() {
@@ -60,8 +69,9 @@ public class WorldDailyReport {
 
 	@Override
 	public String toString() {
-		return "WorldDailyReport [num=" + num + ", country=" + country + ", confirmed=" + confirmed + ", deaths=" + deaths
-				+ ", recovered=" + recovered + ", updatedDate=" + updatedDate + "]";
+		return "WorldDailyReport [num=" + num + ", countryId=" + countryId + ", countryName=" + countryName
+				+ ", confirmed=" + confirmed + ", deaths=" + deaths + ", recovered=" + recovered + ", updatedDate="
+				+ updatedDate + "]";
 	}
-	
+
 }

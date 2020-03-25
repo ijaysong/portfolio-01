@@ -52,7 +52,7 @@ public class Crawler {
 	WorldDailyReportService service;
 
 	// 매일 9시에 CronJob을 실행한다
-    @Scheduled(cron = "0 11 * * * *")
+    @Scheduled(cron = "0 23 * * * *")
     public void cronJobSchedule() {
     	logger.info("Execute Crawler");
     	
@@ -128,7 +128,7 @@ public class Crawler {
     		
     		for(String key : confirmedMap.keySet()) {
     			WorldDailyReport report = new WorldDailyReport();
-    			report.setCountry(key);
+    			report.setCountryName(key);
     			report.setConfirmed(confirmedMap.get(key));
     			report.setDeaths(deathsMap.get(key));
     			report.setRecovered(recoveredMap.get(key));
@@ -147,10 +147,10 @@ public class Crawler {
     	List<WorldDailyReport> insertList = new ArrayList<>();
     	
     	for(WorldDailyReport target : info) {
-    		String country = target.getCountry();
+    		String country = target.getCountryName();
     		
     		for(int i = 0; i < countryList.size(); i++) {
-    			if(country.equals(countryList.get(i))) target.setCountry(Integer.toString(i+1));
+    			if(country.equals(countryList.get(i))) target.setCountryId(i+1);
     		}
     		insertList.add(target);
     	}
@@ -166,7 +166,7 @@ public class Crawler {
     		Set<String> countrySet = new HashSet<>(countryList);
     		
     		for(WorldDailyReport target : info) {
-    			String country = target.getCountry();
+    			String country = target.getCountryName();
     			
     			if(!countrySet.contains(country)) {
     				// Country 테이블에 해당 국가명이 존재하지 않는다면,

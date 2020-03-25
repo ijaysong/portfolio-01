@@ -29,7 +29,7 @@
 		</tr>
 		<tr th:each="row : ${worldList}">
 			<td th:text="${row.num}"></td>
-			<td><a th:text="${row.country}" th:href="@{/{id}(id=${row.country})}"></a></td>
+			<td><a th:text="${row.countryName}" th:href="@{/{id}(id=${row.countryId})}"></a></td>
 			<td th:text="${row.confirmed}"></td>
 			<td th:text="${row.deaths}"></td>
 			<td th:text="${row.recovered}"></td>

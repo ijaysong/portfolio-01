@@ -4,18 +4,29 @@
 <mapper namespace="com.corona.mapper.WorldDailyReportMapper">
 
 	<select id="getWorldList" resultType="WorldDailyReport">
-		SELECT
-			@rownum:=@rownum+1 AS NUM
-			, A.COUNTRY
-			, A.CONFIRMED
-			, A.DEATHS
-			, A.RECOVERED
-			, DATE_FORMAT(A.UPDATED_DATE, '%m.%d 00:00') AS UPDATEDDATE
+		SELECT 
+    		@rownum:=@rownum + 1 AS NUM
+    		, A.COUNTRY AS COUNTRYID
+	        , CASE 
+				WHEN B.KOREAN_NM IS NULL 
+				THEN B.ENGLISH_NM
+				ELSE B.KOREAN_NM
+		      END AS COUNTRYNAME
+		    , A.CONFIRMED
+		    , A.DEATHS
+		    , A.RECOVERED
+		    , DATE_FORMAT(A.UPDATED_DATE, '%m.%d 00:00') AS UPDATEDDATE
 		FROM
-			DEV_CORONA.WORLD_DAILY A, (SELECT @rownum:=0) B
+		    DEV_CORONA.WORLD_DAILY A
+		JOIN
+		    DEV_CORONA.COUNTRY_INFO B
+		ON
+			A.COUNTRY = B.ID
 		WHERE
-			DATE_FORMAT(A.UPDATED_DATE, '%y%m%d') = DATE_FORMAT(NOW(), '%y%m%d')
-		ORDER BY
+		    DATE_FORMAT(A.UPDATED_DATE, '%y%m%d') = DATE_FORMAT(NOW(), '%y%m%d')
+		AND 
+			(@rownum:=0) = 0
+		ORDER BY 
 			A.CONFIRMED DESC
 	</select>
 	
