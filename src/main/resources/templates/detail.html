@@ -14,13 +14,60 @@
       }
     </style>
     
+    <script src="js/jQuery-2.1.4.min.js"></script>
+    
+    <script type="text/javascript">
+    $(document).ready(function() {
+    	var title = 'TEMP';
+		var confirmed = [13000, 11000, 14900, 8000, 19000, 12000, 10000, 18000, 11000, 13000, 14900, 18000];
+		var deaths = [11000, 14900, 8000, 19000, 12000, 10000, 18000, 11000, 13000, 14900, 18000, 13000];
+		var recovered = [14900, 8000, 19000, 12000, 10000, 18000, 11000, 13000, 14900, 18000, 13000, 11000];
+    
+		var ctx = document.getElementById('chartjs').getContext('2d');
+		var lineChart = new Chart(ctx, {
+    	type: 'line',
+	    data: {
+	        labels: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+	        datasets: [{
+	            label: '확진환자',
+	            data: confirmed,
+	            borderColor: 'rgba(0,140,232,0.4)',
+	            backgroundColor: 'rgba(0,140,232,0.2)',
+	            borderWidth: 1
+	        },
+	        {
+	            label: '사망자',
+	            data: deaths,
+	            borderColor: 'rgba(224,59,0,4)',
+	            backgroundColor: 'rgba(224,59,0,0.2)',
+	            borderWidth: 1
+	        },
+	        {
+	            label: '격리해제',
+	            data: recovered,
+	            borderColor: 'rgba(252,222,57,0.4)',
+	            backgroundColor: 'rgba(252,222,57,0.2)',
+	            borderWidth: 1
+	        }]
+	    },
+	    options: {
+	        title: {
+	            display: true,
+	            fontColor: '#454b52',
+	            fontSize: '20',
+	            text: title,
+	        	}
+	   		 }
+		});
+	}
+    </script>
 </head>
 
 <body>
 	<h1>코로나19(COVID-19) 세계 현황</h1>
 	<h4 th:inline="text">[[${updatedDate}]] 기준</h4>
+	<canvas id="chartjs" width="400" height="120"></canvas>
 	<br>
-	
 	<table>
 		<tr>
 			<th>No.</th>
