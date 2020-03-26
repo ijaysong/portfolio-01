@@ -52,12 +52,12 @@ public class Crawler {
 	WorldDailyReportService service;
 
 	// 매일 9시에 CronJob을 실행한다
-    @Scheduled(cron = "0 23 * * * *")
+    @Scheduled(cron = "0 56 * * * *")
     public void cronJobSchedule() {
     	logger.info("Execute Crawler");
     	
     	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-    	LocalDate today = LocalDate.now().minusDays(1);
+    	LocalDate today = LocalDate.now().minusDays(2);
     	current_datetime = formatter.format(today).toString();
     	
     	List<WorldDailyReport> info = execCrawling();
@@ -154,7 +154,8 @@ public class Crawler {
     		}
     		insertList.add(target);
     	}
-    	service.insertWorldList(info);
+    	
+    	service.insertWorldList(insertList);
     }
     
     private void insertCountry(List<WorldDailyReport> info) {

@@ -42,7 +42,7 @@
 		VALUES
 		<foreach collection="list" item="item" separator=" , " >
 		(
-			#{item.country}
+			#{item.countryId}
 			, #{item.confirmed}
 			, #{item.deaths}
 			, #{item.recovered}

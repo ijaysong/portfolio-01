@@ -12,42 +12,92 @@
       th, td {
       	border : 1px solid black
       }
+      h4 {
+      	float : right
+      }
     </style>
     
     <script src="js/jQuery-2.1.4.min.js"></script>
+    <script src="js/Chart.js"></script>
     
     <script type="text/javascript">
     $(document).ready(function() {
-    	var title = 'TEMP';
-		var confirmed = [13000, 11000, 14900, 8000, 19000, 12000, 10000, 18000, 11000, 13000, 14900, 18000];
-		var deaths = [11000, 14900, 8000, 19000, 12000, 10000, 18000, 11000, 13000, 14900, 18000, 13000];
-		var recovered = [14900, 8000, 19000, 12000, 10000, 18000, 11000, 13000, 14900, 18000, 13000, 11000];
+    	
+		var title = 'TEMP';
+		
+		<!-- X축 : 날짜 데이터 취득 -->
+		var xField = $("tr td:nth-child(2)");
+		var xLength = xField.length;
+		var xArray = null;
+
+		if(xLength > 0) {
+			xArray = new Array(xLength);
+			for(var i = 0; i < xLength; i++) {
+				xArray[i] = xField[i].textContent;
+			}
+		}
+		
+		<!-- Y축 : 확진환자 수 데이터 취득 -->
+		var cField = $("tr td:nth-child(3)");
+		var cLength = cField.length;
+		var cArray = null;
+
+		if(cLength > 0) {
+			cArray = new Array(cLength);
+			for(var i = 0; i < cLength; i++) {
+				cArray[i] = cField[i].textContent;
+			}
+		}
+		
+		<!-- Y축 : 사망자 수 데이터 취득 -->
+		var dField = $("tr td:nth-child(4)");
+		var dLength = dField.length;
+		var dArray = null;
+
+		if(dLength > 0) {
+			dArray = new Array(dLength);
+			for(var i = 0; i < dLength; i++) {
+				dArray[i] = dField[i].textContent;
+			}
+		}
+		
+		<!-- Y축 : 격리해제 수 데이터 취득 -->
+		var rField = $("tr td:nth-child(5)");
+		var rLength = rField.length;
+		var rArray = null;
+
+		if(rLength > 0) {
+			rArray = new Array(rLength);
+			for(var i = 0; i < rLength; i++) {
+				rArray[i] = rField[i].textContent;
+			}
+		}
     
 		var ctx = document.getElementById('chartjs').getContext('2d');
 		var lineChart = new Chart(ctx, {
     	type: 'line',
 	    data: {
-	        labels: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+	        labels: xArray,
 	        datasets: [{
 	            label: '확진환자',
-	            data: confirmed,
+	            data: cArray,
 	            borderColor: 'rgba(0,140,232,0.4)',
-	            backgroundColor: 'rgba(0,140,232,0.2)',
-	            borderWidth: 1
+	            backgroundColor: 'rgba(0,140,232,0.1)',
+	            borderWidth: 1.5
 	        },
 	        {
 	            label: '사망자',
-	            data: deaths,
+	            data: dArray,
 	            borderColor: 'rgba(224,59,0,4)',
-	            backgroundColor: 'rgba(224,59,0,0.2)',
-	            borderWidth: 1
+	            backgroundColor: 'rgba(224,59,0,0.1)',
+	            borderWidth: 1.5
 	        },
 	        {
 	            label: '격리해제',
-	            data: recovered,
+	            data: rArray,
 	            borderColor: 'rgba(252,222,57,0.4)',
-	            backgroundColor: 'rgba(252,222,57,0.2)',
-	            borderWidth: 1
+	            backgroundColor: 'rgba(252,222,57,0.1)',
+	            borderWidth: 1.5
 	        }]
 	    },
 	    options: {
@@ -57,14 +107,14 @@
 	            fontSize: '20',
 	            text: title,
 	        	}
-	   		 }
+	   	}
 		});
-	}
+	});
     </script>
 </head>
 
 <body>
-	<h1>코로나19(COVID-19) 세계 현황</h1>
+	<h1 th:inline="text">[[${countryName}]], 코로나 감염 현황</h1>
 	<h4 th:inline="text">[[${updatedDate}]] 기준</h4>
 	<canvas id="chartjs" width="400" height="120"></canvas>
 	<br>
