@@ -23,7 +23,7 @@
     <script type="text/javascript">
     $(document).ready(function() {
     	
-		var title = 'TEMP';
+    	var title = $("input")[0].value;
 		
 		<!-- X축 : 날짜 데이터 취득 -->
 		var xField = $("tr td:nth-child(2)");
@@ -77,24 +77,24 @@
 		var lineChart = new Chart(ctx, {
     	type: 'line',
 	    data: {
-	        labels: xArray,
+	        labels: xArray.reverse(),
 	        datasets: [{
 	            label: '확진환자',
-	            data: cArray,
+	            data: cArray.reverse(),
 	            borderColor: 'rgba(0,140,232,0.4)',
 	            backgroundColor: 'rgba(0,140,232,0.1)',
 	            borderWidth: 1.5
 	        },
 	        {
 	            label: '사망자',
-	            data: dArray,
+	            data: dArray.reverse(),
 	            borderColor: 'rgba(224,59,0,4)',
 	            backgroundColor: 'rgba(224,59,0,0.1)',
 	            borderWidth: 1.5
 	        },
 	        {
 	            label: '격리해제',
-	            data: rArray,
+	            data: rArray.reverse(),
 	            borderColor: 'rgba(252,222,57,0.4)',
 	            backgroundColor: 'rgba(252,222,57,0.1)',
 	            borderWidth: 1.5
@@ -114,8 +114,9 @@
 </head>
 
 <body>
-	<h1 th:inline="text">[[${countryName}]], 코로나 감염 현황</h1>
-	<h4 th:inline="text">[[${updatedDate}]] 기준</h4>
+	<h1 th:inline="text">국가별 발생 현황</h1>
+	<h4 th:inline="text">[[${updatedDate}]]</h4>
+	<input type="hidden" th:value="${countryName}"/>
 	<canvas id="chartjs" width="400" height="120"></canvas>
 	<br>
 	<table>

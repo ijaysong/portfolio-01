@@ -52,12 +52,12 @@ public class Crawler {
 	WorldDailyReportService service;
 
 	// 매일 9시에 CronJob을 실행한다
-    @Scheduled(cron = "0 56 * * * *")
+    @Scheduled(cron = "0 7 * * * *")
     public void cronJobSchedule() {
     	logger.info("Execute Crawler");
     	
     	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-    	LocalDate today = LocalDate.now().minusDays(2);
+    	LocalDate today = LocalDate.now().minusDays(1);
     	current_datetime = formatter.format(today).toString();
     	
     	List<WorldDailyReport> info = execCrawling();

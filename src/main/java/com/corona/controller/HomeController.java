@@ -39,8 +39,14 @@ public class HomeController {
 	public String detail(@PathVariable("countryId")String country, Model model) {
 		List<WorldDailyReport> result = service.getDetailList(country);
 		model.addAttribute("worldList", result);
-		model.addAttribute("updatedDate", result.get(0).getUpdatedDate());
-		model.addAttribute("countryName", result.get(0).getCountryName());
+		if(result.size() > 0) {
+			String[] updateDate = result.get(0).getUpdatedDate().split("-");
+			model.addAttribute("updatedDate",  updateDate[0] + "년" + updateDate[1] + "월" + updateDate[2] + "일 기준");
+			model.addAttribute("countryName", result.get(0).getCountryName());
+		} else {
+			model.addAttribute("updatedDate", "");
+			model.addAttribute("countryName", "");
+		}
 		
 		return "detail";
 	}
