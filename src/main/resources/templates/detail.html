@@ -1,138 +1,168 @@
+
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
+    <head>
+        <title>국가별 발생 현황</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+    <body>
+        <!-- jumbotron -->
+		<div class="jumbotron jumbotron-fluid bg-dark text-light">
+			<div class="container">
+				<h1 class="display-4 text-center">
+                    코로나19 (COVID-19)<br>
+					국가별 발생 현황
+                </h1>
+                <p th:inline="text" class="lead text-center">[[${countryName}]]</p>
+			</div>
+		</div>
 
-<head>
-	<title>Home</title>
-	<meta charset="UTF-8" />
-	
-	<style>
-      table {
-        width: 100%;
-        border-collapse : collapse
-      }
-      th, td {
-      	border : 1px solid black
-      }
-      h4 {
-      	float : right
-      }
-    </style>
-    
-    <script src="js/jQuery-2.1.4.min.js"></script>
-    <script src="js/Chart.js"></script>
-    
-    <script type="text/javascript">
-    $(document).ready(function() {
-    	
-    	var title = $("input")[0].value;
-		
-		<!-- X축 : 날짜 데이터 취득 -->
-		var xField = $("tr td:nth-child(2)");
-		var xLength = xField.length;
-		var xArray = null;
+        <!-- data -->
+        <div class="container">
+            <div class="row">
+                <div class="col overflow-auto">
+                    <div class="chart-container" style="min-height: 400px; min-width: 400px;">
+                        <canvas id="chartjs"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <br><br>
 
-		if(xLength > 0) {
-			xArray = new Array(xLength);
-			for(var i = 0; i < xLength; i++) {
-				xArray[i] = xField[i].textContent;
-			}
-		}
-		
-		<!-- Y축 : 확진환자 수 데이터 취득 -->
-		var cField = $("tr td:nth-child(3)");
-		var cLength = cField.length;
-		var cArray = null;
+            <div class="row">
+                <div class="col">
+                    <h5 th:inline="text" class="text-right">
+                        [[${updatedDate}]]
+                    </h5>
+                </div>
+            </div>
 
-		if(cLength > 0) {
-			cArray = new Array(cLength);
-			for(var i = 0; i < cLength; i++) {
-				cArray[i] = cField[i].textContent;
-			}
-		}
-		
-		<!-- Y축 : 사망자 수 데이터 취득 -->
-		var dField = $("tr td:nth-child(4)");
-		var dLength = dField.length;
-		var dArray = null;
+            <div class="row">
+                <div class="col table-responsive-sm">
+                    <!-- data list -->
+                    <table class="table table-hover text-center">
+                        <caption class="text-right">
+                            출처: 존스 홉킨스 코로나 바이러스 리소스 센터 (JOHNS HOPKINS CORONAVIRUS RESOURCE CENTER)
+                        </caption>
+                        <thead>
+                            <tr class="thead-light">
+                                <th scope="col">No.</th>
+                                <th scope="col">날짜</th>
+                                <th scope="col">확진환자</th>
+                                <th scope="col">사망자</th>
+                                <th scope="col">격리해제</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="row, index : ${worldList}">
+                                <th th:text="${index.index} + 1" scope="row"></th>
+                                <td th:text="${row.updatedDate}"></td>
+                                <td th:text="${row.confirmed}"></td>
+                                <td th:text="${row.deaths}"></td>
+                                <td th:text="${row.recovered}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-		if(dLength > 0) {
-			dArray = new Array(dLength);
-			for(var i = 0; i < dLength; i++) {
-				dArray[i] = dField[i].textContent;
-			}
-		}
-		
-		<!-- Y축 : 격리해제 수 데이터 취득 -->
-		var rField = $("tr td:nth-child(5)");
-		var rLength = rField.length;
-		var rArray = null;
+        <script src="js/jQuery-2.1.4.min.js"></script>
+        <script src="js/Chart.js"></script>
+        <script type="text/javascript">
+        $(document).ready(function() {
+            var title = $("input")[0].value;
+            
+            // X축 : 날짜 데이터 취득
+            var xField = $("tr td:nth-child(2)");
+            var xLength = xField.length;
+            var xArray = null;
 
-		if(rLength > 0) {
-			rArray = new Array(rLength);
-			for(var i = 0; i < rLength; i++) {
-				rArray[i] = rField[i].textContent;
-			}
-		}
-    
-		var ctx = document.getElementById('chartjs').getContext('2d');
-		var lineChart = new Chart(ctx, {
-    	type: 'line',
-	    data: {
-	        labels: xArray.reverse(),
-	        datasets: [{
-	            label: '확진환자',
-	            data: cArray.reverse(),
-	            borderColor: 'rgba(0,140,232,0.4)',
-	            backgroundColor: 'rgba(0,140,232,0.1)',
-	            borderWidth: 1.5
-	        },
-	        {
-	            label: '사망자',
-	            data: dArray.reverse(),
-	            borderColor: 'rgba(224,59,0,4)',
-	            backgroundColor: 'rgba(224,59,0,0.1)',
-	            borderWidth: 1.5
-	        },
-	        {
-	            label: '격리해제',
-	            data: rArray.reverse(),
-	            borderColor: 'rgba(252,222,57,0.4)',
-	            backgroundColor: 'rgba(252,222,57,0.1)',
-	            borderWidth: 1.5
-	        }]
-	    },
-	    options: {
-	        title: {
-	            display: true,
-	            fontColor: '#454b52',
-	            fontSize: '20',
-	            text: title,
-	        	}
-	   	}
-		});
-	});
-    </script>
-</head>
+            if(xLength > 0) {
+                xArray = new Array(xLength);
+                for(var i = 0; i < xLength; i++) {
+                    xArray[i] = xField[i].textContent;
+                }
+            }
+            
+            // Y축 : 확진환자 수 데이터 취득
+            var cField = $("tr td:nth-child(3)");
+            var cLength = cField.length;
+            var cArray = null;
 
-<body>
-	<h1 th:inline="text">국가별 발생 현황</h1>
-	<h4 th:inline="text">[[${updatedDate}]]</h4>
-	<input type="hidden" th:value="${countryName}"/>
-	<canvas id="chartjs" width="400" height="120"></canvas>
-	<br>
-	<table>
-		<tr>
-			<th>No.</th>
-			<th>날짜</th>
-			<th>확진환자</th>
-			<th>사망자</th>
-			<th>격리해제</th>
-		</tr>
-		<tr th:each="row : ${worldList}">
-			<td th:text="${row.num}"></td>
-			<td th:text="${row.updatedDate}"></td>
-			<td th:text="${row.confirmed}"></td>
-			<td th:text="${row.deaths}"></td>
-			<td th:text="${row.recovered}"></td>
-		</tr>
-	</table>
-</body>
+            if(cLength > 0) {
+                cArray = new Array(cLength);
+                for(var i = 0; i < cLength; i++) {
+                    cArray[i] = cField[i].textContent;
+                }
+            }
+            
+            // Y축 : 사망자 수 데이터 취득
+            var dField = $("tr td:nth-child(4)");
+            var dLength = dField.length;
+            var dArray = null;
+
+            if(dLength > 0) {
+                dArray = new Array(dLength);
+                for(var i = 0; i < dLength; i++) {
+                    dArray[i] = dField[i].textContent;
+                }
+            }
+            
+            // Y축 : 격리해제 수 데이터 취득
+            var rField = $("tr td:nth-child(5)");
+            var rLength = rField.length;
+            var rArray = null;
+
+            if(rLength > 0) {
+                rArray = new Array(rLength);
+                for(var i = 0; i < rLength; i++) {
+                    rArray[i] = rField[i].textContent;
+                }
+            }
+        
+            var ctx = document.getElementById('chartjs').getContext('2d');
+            var lineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: xArray.reverse(),
+                    datasets: [
+                        {
+                            label: '확진환자',
+                            data: cArray.reverse(),
+                            borderColor: 'rgba(0,140,232,0.4)',
+                            backgroundColor: 'rgba(0,140,232,0.1)',
+                            borderWidth: 1.5
+                        },
+                        {
+                            label: '사망자',
+                            data: dArray.reverse(),
+                            borderColor: 'rgba(224,59,0,4)',
+                            backgroundColor: 'rgba(224,59,0,0.1)',
+                            borderWidth: 1.5
+                        },
+                        {
+                            label: '격리해제',
+                            data: rArray.reverse(),
+                            borderColor: 'rgba(252,222,57,0.4)',
+                            backgroundColor: 'rgba(252,222,57,0.1)',
+                            borderWidth: 1.5
+                        }
+                    ]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        fontColor: '#454b52',
+                        fontSize: '20'
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        });
+        </script>
+    </body>
+</html>
