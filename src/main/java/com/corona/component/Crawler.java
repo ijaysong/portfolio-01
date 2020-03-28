@@ -52,7 +52,7 @@ public class Crawler {
 	WorldDailyReportService service;
 
 	// 매일 9시에 CronJob을 실행한다
-    @Scheduled(cron = "0 7 * * * *")
+    @Scheduled(cron = "0 0 9 * * *")
     public void cronJobSchedule() {
     	logger.info("Execute Crawler");
     	
