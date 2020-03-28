@@ -17,7 +17,6 @@ public class WorldDailyReportServiceImpl implements WorldDailyReportService {
 	@Override
 	public List<WorldDailyReport> getWorldList() {
 		return mapper.getWorldList();
-		
 	}
 
 	@Override

@@ -25,19 +25,46 @@ public class HomeController {
 	@Autowired
 	private Crawler c;
 	
+	/**
+	 * 메인 화면
+	 * 
+	 * @param  모델
+	 * @return 페이지 명
+	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Model model) {
+		logger.info("Main page");
+		
+		// 코로나 정보를 취득한다
 		List<WorldDailyReport> result = service.getWorldList();
 		
+		// 모델에 데이터를 담아서 보낸다 (코로나정보, 갱신일자)
 		model.addAttribute("worldList", result);
-		model.addAttribute("updatedDate", result.get(0).getUpdatedDate());
+		if(result.size() > 0) {
+			model.addAttribute("updatedDate", result.get(0).getUpdatedDate());
+		} else {
+			model.addAttribute("updatedDate", "");
+		}
 		
 		return "home";
 	}
 	
+	
+	/**
+	 * 상세 화면
+	 * 
+	 * @param  국가ID
+	 * @param  모델
+	 * @return 페이지 명
+	 */
 	@RequestMapping(value="/{countryId}", method = RequestMethod.GET)
 	public String detail(@PathVariable("countryId")String country, Model model) {
+		logger.info("Detail page");
+		
+		// 특정 국가의 코로나 정보를 취득한다
 		List<WorldDailyReport> result = service.getDetailList(country);
+		
+		// 모델에 데이터를 담아서 보낸다 (코로나정보, 갱신일자, 국가명)
 		model.addAttribute("worldList", result);
 		if(result.size() > 0) {
 			String[] updateDate = result.get(0).getUpdatedDate().split("-");

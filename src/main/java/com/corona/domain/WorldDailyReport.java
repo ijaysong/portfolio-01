@@ -1,24 +1,18 @@
 package com.corona.domain;
 
 public class WorldDailyReport {
-	private int num;
-	private int countryId;
-	private String countryName;
-	private int confirmed;
-	private int deaths;
-	private int recovered;
-	private String updatedDate;
+	
+	private int countryId;       // 국가ID
+	private String countryName;  // 국가명
+	private int confirmed;       // 확진환자
+	private int deaths;          // 사망자
+	private int recovered;       // 격리해제
+	private String updatedDate;  // 갱신일자
+	
 	
 	public WorldDailyReport() {}
 
-	public int getNum() {
-		return num;
-	}
-
-	public void setNum(int num) {
-		this.num = num;
-	}
-
+	
 	public int getCountryId() {
 		return countryId;
 	}
@@ -69,7 +63,7 @@ public class WorldDailyReport {
 
 	@Override
 	public String toString() {
-		return "WorldDailyReport [num=" + num + ", countryId=" + countryId + ", countryName=" + countryName
+		return "WorldDailyReport [countryId=" + countryId + ", countryName=" + countryName
 				+ ", confirmed=" + confirmed + ", deaths=" + deaths + ", recovered=" + recovered + ", updatedDate="
 				+ updatedDate + "]";
 	}
