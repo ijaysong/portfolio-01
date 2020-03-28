@@ -3,33 +3,33 @@
 
 <mapper namespace="com.corona.mapper.WorldDailyReportMapper">
 
+	<!-- 코로나 정보 취득 -->
 	<select id="getWorldList" resultType="WorldDailyReport">
 		SELECT 
-    		@rownum:=@rownum + 1 AS NUM
-    		, A.COUNTRY AS COUNTRYID
+    		A.COUNTRY AS COUNTRYID
 	        , CASE 
 				WHEN B.KOREAN_NM IS NULL 
 				THEN B.ENGLISH_NM
 				ELSE B.KOREAN_NM
 		      END AS COUNTRYNAME
-		    , A.CONFIRMED
-		    , A.DEATHS
-		    , A.RECOVERED
-		    , DATE_FORMAT(A.UPDATED_DATE, '%Y년%m월%d일') AS UPDATEDDATE
+		    , MAX(A.CONFIRMED) AS CONFIRMED
+		    , MAX(A.DEATHS) AS DEATHS
+		    , MAX(A.RECOVERED) AS RECOVERED
+		    , MAX(DATE_FORMAT(A.UPDATED_DATE, '%Y년%m월%d일')) AS UPDATEDDATE
 		FROM
 		    WORLD_DAILY A
 		JOIN
 		    COUNTRY_INFO B
 		ON
 			A.COUNTRY = B.ID
-		WHERE
-		    DATE_FORMAT(A.UPDATED_DATE, '%y%m%d') = DATE_FORMAT(NOW(), '%y%m%d')
-		AND 
-			(@rownum:=0) = 0
+		GROUP BY
+			COUNTRYID
+			, COUNTRYNAME
 		ORDER BY 
-			A.CONFIRMED DESC
+			MAX(A.CONFIRMED) DESC
 	</select>
 	
+	<!-- 코로나 정보 등록 -->
 	<insert id="insertWorldList" parameterType="java.util.List">
 		INSERT INTO
 			DEV_CORONA.WORLD_DAILY
@@ -50,10 +50,10 @@
 	    </foreach>
 	</insert>
 	
+	<!-- 특정 국가의 코로나 정보 취득 -->
 	<select id="getDetailList" resultType="WorldDailyReport">
 		SELECT
-			@rownum:=@rownum+1 AS NUM
-			, DATE_FORMAT(A.UPDATED_DATE, '%Y-%m-%d') AS UPDATEDDATE
+			DATE_FORMAT(A.UPDATED_DATE, '%Y-%m-%d') AS UPDATEDDATE
 			, CASE 
 				WHEN B.KOREAN_NM IS NULL 
 				THEN B.ENGLISH_NM
@@ -70,13 +70,12 @@
 			A.COUNTRY = B.ID
 		WHERE
 			A.COUNTRY = #{COUNTRY}
-		AND 
-			(@rownum:=0) = 0
 		ORDER BY
 			A.UPDATED_DATE DESC
 		LIMIT 30
 	</select>
 	
+	<!-- 국가 정보 취득 -->
 	<select id="getCountryList" resultType="string">
 		SELECT
 			ENGLISH_NM
@@ -86,6 +85,7 @@
 			ID
 	</select>
 	
+	<!-- 국가 정보 등록 -->
 	<insert id="addCountryList" parameterType="java.util.List">
 		INSERT INTO
 			COUNTRY_INFO
