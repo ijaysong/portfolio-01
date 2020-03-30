@@ -32,7 +32,7 @@
 	<!-- 코로나 정보 등록 -->
 	<insert id="insertWorldList" parameterType="java.util.List">
 		INSERT INTO
-			DEV_CORONA.WORLD_DAILY
+			WORLD_DAILY
 		(
 			COUNTRY
 			, CONFIRMED

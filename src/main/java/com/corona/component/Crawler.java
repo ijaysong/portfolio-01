@@ -102,6 +102,7 @@ public class Crawler {
     		
     		// Response상태를 체크한다
     		if (200 > http.getResponseCode() && http.getResponseCode() > 299) {
+    			logger.warn("Response 상태가 200번대가 아님");
     			return result;
     		} 
     		// CSV파일의 내용을 읽어들인다 
@@ -194,12 +195,15 @@ public class Crawler {
     			}
     			coronaInfo.add(target);
     		}
+    		
+    		// 국가번호를 지정한 코로나 정보를 등록한다 
+    		if(coronaInfo.size() > 0) {
+    			service.insertWorldList(coronaInfo);
+    		}
+    	} else {
+    		logger.warn("코로나 CSV 데이터 혹은 국가 정보가 없음");
     	}
     	
-    	// 국가번호를 지정한 코로나 정보를 등록한다 
-		if(coronaInfo.size() > 0) {
-			service.insertWorldList(coronaInfo);
-		}
     }
     
     
@@ -231,6 +235,6 @@ public class Crawler {
     		if(countryInfo.size() > 0) {
     			service.addCountryList(countryInfo);
     		}
-    	}
+    	} 
 	}
 }
