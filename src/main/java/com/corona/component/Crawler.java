@@ -62,7 +62,7 @@ public class Crawler {
 	 * 크롤링 작업
 	 * 매일 오전 9시에 CronJob을 실행하는 메소드
 	 */
-    @Scheduled(cron = "0 0 9 * * *")
+    @Scheduled(cron = "0 30 9 * * *")
     public void cronJobSchedule() {
     	logger.info("Execute Crawler");
     	
