@@ -49,9 +49,9 @@
 								<td>
 									<a th:text="${row.countryName}" th:href="@{/{id}(id=${row.countryId})}"></a>
 								</td>
-								<td th:text="${row.confirmed}"></td>
-								<td th:text="${row.deaths}"></td>
-								<td th:text="${row.recovered}"></td>
+								<td th:text="${#numbers.formatInteger(row.confirmed, 1, 'COMMA')}"></td>
+								<td th:text="${#numbers.formatInteger(row.deaths, 1, 'COMMA')}"></td>
+								<td th:text="${#numbers.formatInteger(row.recovered, 1, 'COMMA')}"></td>
 							</tr>
 						</tbody>
 					</table>

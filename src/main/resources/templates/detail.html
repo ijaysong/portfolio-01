@@ -59,9 +59,9 @@
                             <tr th:each="row, index : ${worldList}">
                                 <th th:text="${index.index} + 1" scope="row"></th>
                                 <td th:text="${row.updatedDate}"></td>
-                                <td th:text="${row.confirmed}"></td>
-                                <td th:text="${row.deaths}"></td>
-                                <td th:text="${row.recovered}"></td>
+                                <td th:text="${#numbers.formatInteger(row.confirmed, 1, 'COMMA')}"></td>
+                                <td th:text="${#numbers.formatInteger(row.deaths, 1, 'COMMA')}"></td>
+                                <td th:text="${#numbers.formatInteger(row.recovered, 1, 'COMMA')}"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -94,7 +94,7 @@
             if(cLength > 0) {
                 cArray = new Array(cLength);
                 for(var i = 0; i < cLength; i++) {
-                    cArray[i] = cField[i].textContent;
+                    cArray[i] = cField[i].textContent.replace(",", "");
                 }
             }
             
@@ -106,7 +106,7 @@
             if(dLength > 0) {
                 dArray = new Array(dLength);
                 for(var i = 0; i < dLength; i++) {
-                    dArray[i] = dField[i].textContent;
+                    dArray[i] = dField[i].textContent.replace(",", "");
                 }
             }
             
@@ -118,7 +118,7 @@
             if(rLength > 0) {
                 rArray = new Array(rLength);
                 for(var i = 0; i < rLength; i++) {
-                    rArray[i] = rField[i].textContent;
+                    rArray[i] = rField[i].textContent.replace(",", "");
                 }
             }
         
