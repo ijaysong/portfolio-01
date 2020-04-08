@@ -64,6 +64,20 @@ public class HomeController {
 		// 특정 국가의 코로나 정보를 취득한다
 		List<WorldDailyReport> result = service.getDetailList(country);
 		
+		// 증감수치를 구한다
+		for(int i = 0; i < result.size()-1; i++) {
+			int newConfirmed = result.get(0).getConfirmed();
+			int newDeaths = result.get(0).getDeaths();
+			int newRecovered = result.get(0).getRecovered();
+			int oldConfirmed = result.get(i+1).getConfirmed();
+			int oldDeaths = result.get(i+1).getDeaths();
+			int oldRecovered = result.get(i+1).getRecovered();
+			
+			result.get(i).setConfirmedGap(newConfirmed - oldConfirmed);
+			result.get(i).setDeathsGap(newDeaths - oldDeaths);
+			result.get(i).setRecoveredGap(newRecovered - oldRecovered);
+		}
+		
 		// 모델에 데이터를 담아서 보낸다 (코로나정보, 갱신일자, 국가명)
 		model.addAttribute("worldList", result);
 		if(result.size() > 0) {

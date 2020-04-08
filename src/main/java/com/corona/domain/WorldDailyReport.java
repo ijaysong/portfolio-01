@@ -6,8 +6,11 @@ public class WorldDailyReport {
 	private String countryName;  // 국가명
 	private int confirmed;       // 확진환자
 	private int deaths;          // 사망자
-	private int recovered;       // 격리해제
+	private int recovered;       // 격리해제자
 	private String updatedDate;  // 갱신일자
+	private int confirmedGap; // 확진환자 증감수치
+	private int deathsGap;// 사망자 증감수치
+	private int recoveredGap; // 격리해제 증감수치
 	
 	
 	public WorldDailyReport() {}
@@ -60,12 +63,42 @@ public class WorldDailyReport {
 	public void setUpdatedDate(String updatedDate) {
 		this.updatedDate = updatedDate;
 	}
+	
+	public int getConfirmedGap() {
+		return confirmedGap;
+	}
+
+
+	public void setConfirmedGap(int confirmedGap) {
+		this.confirmedGap = confirmedGap;
+	}
+
+
+	public int getDeathsGap() {
+		return deathsGap;
+	}
+
+
+	public void setDeathsGap(int deathsGap) {
+		this.deathsGap = deathsGap;
+	}
+
+
+	public int getRecoveredGap() {
+		return recoveredGap;
+	}
+
+
+	public void setRecoveredGap(int recoveredGap) {
+		this.recoveredGap = recoveredGap;
+	}
+
 
 	@Override
 	public String toString() {
-		return "WorldDailyReport [countryId=" + countryId + ", countryName=" + countryName
-				+ ", confirmed=" + confirmed + ", deaths=" + deaths + ", recovered=" + recovered + ", updatedDate="
-				+ updatedDate + "]";
+		return "WorldDailyReport [countryId=" + countryId + ", countryName=" + countryName + ", confirmed=" + confirmed
+				+ ", deaths=" + deaths + ", recovered=" + recovered + ", updatedDate=" + updatedDate + ", confirmedGap="
+				+ confirmedGap + ", deathsGap=" + deathsGap + ", recoveredGap=" + recoveredGap + "]";
 	}
 
 }
