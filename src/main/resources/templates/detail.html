@@ -57,14 +57,26 @@
                         </thead>
                         <tbody>
                             <tr th:each="row, index : ${worldList}">
+                            	<!-- No. -->
                                 <th th:text="${index.index} + 1" scope="row"></th>
+                                
+                                <!-- 갱신날짜 -->
                                 <td th:text="${row.updatedDate}"></td>
+                                
+                                <!-- 확진자 -->
                                 <td th:text="${#numbers.formatInteger(row.confirmed, 1, 'COMMA')}"></td>
-                                <td th:text="${#numbers.formatInteger(row.confirmedGap, 1, 'COMMA')}"></td>
+                                <td th:if="${row.confirmedGap > 0}" th:text="${'+' + #numbers.formatInteger(row.confirmedGap, 1, 'COMMA')}"></td>
+                                <td th:unless="${row.confirmedGap > 0}" th:text="${#numbers.formatInteger(row.confirmedGap, 1, 'COMMA')}"></td>
+                                
+                                <!-- 사망자 -->
                                 <td th:text="${#numbers.formatInteger(row.deaths, 1, 'COMMA')}"></td>
-                                <td th:text="${#numbers.formatInteger(row.deathsGap, 1, 'COMMA')}"></td>
+                                <td th:if="${row.deathsGap > 0}" th:text="${'+' + #numbers.formatInteger(row.deathsGap, 1, 'COMMA')}"></td>
+                                <td th:unless="${row.deathsGap > 0}" th:text="${#numbers.formatInteger(row.deathsGap, 1, 'COMMA')}"></td>
+                                
+                                <!-- 격리해제 -->
                                 <td th:text="${#numbers.formatInteger(row.recovered, 1, 'COMMA')}"></td>
-                                <td th:text="${#numbers.formatInteger(row.recoveredGap, 1, 'COMMA')}"></td>
+                                <td th:if="${row.recoveredGap > 0}" th:text="${'+' + #numbers.formatInteger(row.recoveredGap, 1, 'COMMA')}"></td>
+                                <td th:unless="${row.recoveredGap > 0}" th:text="${#numbers.formatInteger(row.recoveredGap, 1, 'COMMA')}"></td>
                             </tr>
                         </tbody>
                     </table>
