@@ -76,8 +76,6 @@ public class HomeController {
 			result.get(i).setConfirmedGap(newConfirmed - oldConfirmed);
 			result.get(i).setDeathsGap(newDeaths - oldDeaths);
 			result.get(i).setRecoveredGap(newRecovered - oldRecovered);
-			
-			System.out.println(newConfirmed + "/" + oldConfirmed);
 		}
 		
 		// 모델에 데이터를 담아서 보낸다 (코로나정보, 갱신일자, 국가명)
