@@ -19,16 +19,24 @@
 
 		<!-- data -->
 		<div class="container">
+			<div class="row">
+				<div class="col">
+					<h5 th:inline="text" class="text-right">
+						[[${updatedDate}]] 기준
+					</h5>
+				</div>
+			</div>
 			
 			<div id="chartdiv" style="max-width:100%; height:600px"></div>
+			
+			<h6 th:inline="text" class="text-right text-muted">
+				출처: 존스 홉킨스 코로나 바이러스 리소스 센터 (JOHNS HOPKINS CORONAVIRUS RESOURCE CENTER)
+			</h6>
 
 			<div class="row">
 				<div class="col table-responsive-sm">
 					<!-- data list -->
 					<table class="table table-hover text-center">
-						<caption class="text-right">
-							출처: 존스 홉킨스 코로나 바이러스 리소스 센터 (JOHNS HOPKINS CORONAVIRUS RESOURCE CENTER)
-						</caption>
 						<thead>
 							<tr class="thead-light">
 								<th scope="col">No.</th>
@@ -68,10 +76,6 @@
 			
 				<!-- Create map instance -->
 				var chart = am4core.create("chartdiv", am4maps.MapChart);
-				
-				var title = chart.titles.create();
-				title.text = "[bold font-size: 20][[${updatedDate}]] 기준[/]";
-				title.align = "right";
 				
 				<!-- Get values -->
 				var map = new Map();
