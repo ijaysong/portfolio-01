@@ -64,15 +64,17 @@ public class HomeController {
 		// 특정 국가의 코로나 정보를 취득한다
 		List<WorldDailyReport> result = service.getDetailList(country);
 		
-		// 증감수치를 구한다
 		for(int i = 0; i < result.size()-1; i++) {
+			// 기준이 되는 날짜의 데이터
 			int newConfirmed = result.get(i).getConfirmed();
 			int newDeaths = result.get(i).getDeaths();
 			int newRecovered = result.get(i).getRecovered();
+			// 비교대상이 되는 날짜의 데이터
 			int oldConfirmed = result.get(i+1).getConfirmed();
 			int oldDeaths = result.get(i+1).getDeaths();
 			int oldRecovered = result.get(i+1).getRecovered();
 			
+			// 증감수치를 구한다
 			result.get(i).setConfirmedGap(newConfirmed - oldConfirmed);
 			result.get(i).setDeathsGap(newDeaths - oldDeaths);
 			result.get(i).setRecoveredGap(newRecovered - oldRecovered);
