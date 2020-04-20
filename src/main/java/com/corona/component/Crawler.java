@@ -65,7 +65,7 @@ public class Crawler {
 	 * 크롤링 작업
 	 * 매일 3시간마다 CronJob을 실행하는 메소드
 	 */
-    @Scheduled(cron = "0 0 /3 * * *")
+    @Scheduled(cron = "0 0 0/3 * * *")
     public void cronJobSchedule() throws Exception {
     	
     	// 오늘의 날짜를 취득한다
