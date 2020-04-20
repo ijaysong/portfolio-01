@@ -32,7 +32,10 @@ public class Crawler {
 	
 	private static Logger logger = LoggerFactory.getLogger(Crawler.class);
 	
-	/** 현재날짜 **/
+	/** Report 날짜 **/
+	private static String target_datetime = "";
+	
+	/** 오늘 **/
 	private static String current_datetime = "";
 	
 	/** 존스홉킨스 코로나 CSV URL **/
@@ -60,23 +63,59 @@ public class Crawler {
 	
 	/**
 	 * 크롤링 작업
-	 * 매일 오전 9시에 CronJob을 실행하는 메소드
+	 * 매일 3시간마다 CronJob을 실행하는 메소드
 	 */
-    @Scheduled(cron = "0 30 9 * * *")
-    public void cronJobSchedule() {
-    	logger.info("Execute Crawler");
+    //@Scheduled(cron = "0 0 /3 * * *")
+    @Scheduled(cron = "0 0/1 * * * *")
+    public void cronJobSchedule() throws Exception {
     	
     	// 오늘의 날짜를 취득한다
     	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-    	LocalDate today = LocalDate.now().minusDays(1);
+    	LocalDate target = LocalDate.now().minusDays(1);
+    	target_datetime = formatter.format(target).toString();
+    	
+    	LocalDate today = LocalDate.now();
     	current_datetime = formatter.format(today).toString();
     	
-    	// 코로나 CSV파일 내용을 읽어들인다
-    	List<WorldDailyReport> info = execCrawling();
-    	// 국가 정보를 등록한다
-    	insertCountry(info);
-    	// 코로나 정보를 등록한다
-    	insertCsvData(info);
+    	// 크롤링 작업을 수행유무를 확인한다.
+    	boolean executed = checkCrawlingExecuteion(current_datetime);
+    	
+    	// 크롤링을 수행하지 않았다면,
+    	if(!executed) {
+    		logger.info("Execute Crawler");
+    		
+    		// 코로나 CSV파일 내용을 읽어들인다
+        	List<WorldDailyReport> info = execCrawling();
+        	// 국가 정보를 등록한다
+        	insertCountry(info);
+        	// 코로나 정보를 등록한다
+        	insertCsvData(info);
+        	// 크롤링 완료 날짜를 업데이트한다
+        	updateCrawlingDate(target_datetime);
+    	}
+    }
+    
+    
+    /**
+     * 크롤링 완료 날짜 갱신
+     */
+    public void updateCrawlingDate(String yesterday) throws Exception {
+    	logger.info("Update Crawling Execution Date");
+    	service.updateCrawlingDate(yesterday);
+    }
+    
+    /**
+     * 크롤링 실행 유무 확인
+     * CSV 데이터가 정시에 올라오지 않아 발생하는 에러에 대한 대응책
+     * 
+     * @return 크롤링 실행 유무
+     * @throws Exception 
+     */
+    public boolean checkCrawlingExecuteion(String today) throws Exception {
+    	logger.info("Check Crawling Execution");
+    	boolean result = service.checkCrawlingExecution(today);
+    	
+    	return result;
     }
     
     
@@ -96,7 +135,7 @@ public class Crawler {
     	CSVReader reader = null;
     	try {
     		// URL과 연결한다
-    		URL u = new URL(CONN_URL+current_datetime+EXTENSION);
+    		URL u = new URL(CONN_URL+target_datetime+EXTENSION);
     		HttpURLConnection http = (HttpURLConnection)u.openConnection();
     		http.setRequestMethod("GET");
     		
@@ -177,8 +216,9 @@ public class Crawler {
 	 * 코로나 정보에 국가 번호를 지정하여 DB에 등록한다
 	 * 
 	 * @param 코로나 CSV 데이터
+	 * @throws Exception 
 	 */
-    public void insertCsvData(List<WorldDailyReport> info) {
+    public void insertCsvData(List<WorldDailyReport> info) throws Exception {
     	// 코로나 정보 테이블에 등록할 데이터
     	List<WorldDailyReport> coronaInfo = new ArrayList<>();
     	// DB에 이미 등록되어 있는 국가정보를 가져온다 (국가번호, 국가명)
@@ -212,8 +252,9 @@ public class Crawler {
 	 * 테이블에 존재하지 않는 국가정보를 등록한다 
 	 * 
 	 * @param 코로나 CSV 데이터
+	 * @throws Exception 
 	 */
-    private void insertCountry(List<WorldDailyReport> info) {
+    private void insertCountry(List<WorldDailyReport> info) throws Exception {
     	// 국가 정보 테이블에 등록할 데이터
     	List<String> countryInfo = new ArrayList<>();
     	// DB에 이미 등록되어 있는 국가정보를 가져온다 (국가번호, 국가명)

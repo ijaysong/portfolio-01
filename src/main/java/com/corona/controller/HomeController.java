@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.corona.component.Crawler;
 import com.corona.domain.WorldDailyReport;
 import com.corona.service.WorldDailyReportService;
 
@@ -22,17 +21,16 @@ public class HomeController {
 	@Autowired
 	private WorldDailyReportService service;
 	
-	@Autowired
-	private Crawler c;
-	
+
 	/**
 	 * 메인 화면
 	 * 
 	 * @param  모델
 	 * @return 페이지 명
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Model model) {
+	public String home(Model model) throws Exception {
 		logger.info("Main page");
 		
 		// 코로나 정보를 취득한다
@@ -56,9 +54,10 @@ public class HomeController {
 	 * @param  국가ID
 	 * @param  모델
 	 * @return 페이지 명
+	 * @throws Exception 
 	 */
 	@RequestMapping(value="/{countryId}", method = RequestMethod.GET)
-	public String detail(@PathVariable("countryId")String country, Model model) {
+	public String detail(@PathVariable("countryId")String country, Model model) throws Exception {
 		logger.info("Detail page");
 		
 		// 특정 국가의 코로나 정보를 취득한다

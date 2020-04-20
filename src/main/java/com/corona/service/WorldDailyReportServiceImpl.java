@@ -15,28 +15,38 @@ public class WorldDailyReportServiceImpl implements WorldDailyReportService {
 	private WorldDailyReportMapper mapper;
 
 	@Override
-	public List<WorldDailyReport> getWorldList() {
+	public List<WorldDailyReport> getWorldList() throws Exception {
 		return mapper.getWorldList();
 	}
 
 	@Override
-	public void insertWorldList(List<WorldDailyReport> info) {
+	public void insertWorldList(List<WorldDailyReport> info) throws Exception {
 		mapper.insertWorldList(info);
 	}
 
 	@Override
-	public List<WorldDailyReport> getDetailList(String country) {
+	public List<WorldDailyReport> getDetailList(String country) throws Exception {
 		return mapper.getDetailList(country);
 	}
 
 	@Override
-	public List<String> getCountryList() {
+	public List<String> getCountryList() throws Exception {
 		return mapper.getCountryList();
 	}
 
 	@Override
-	public void addCountryList(List<String> countryList) {
+	public void addCountryList(List<String> countryList) throws Exception {
 		mapper.addCountryList(countryList);
+	}
+
+	@Override
+	public boolean checkCrawlingExecution(String today) throws Exception {
+		return mapper.checkCrawlingExecution(today);
+	}
+
+	@Override
+	public void updateCrawlingDate(String today) throws Exception {
+		mapper.updateCrawlingDate(today);
 	}
 
 }

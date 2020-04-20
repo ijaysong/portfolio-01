@@ -99,4 +99,23 @@
 		)
 	    </foreach>
 	</insert>
+	
+	<!--  크롤링 실행 유무 확인 -->
+	<select id="checkCrawlingExecution" resultType="boolean">
+		SELECT EXISTS
+		(
+			SELECT * FROM CRAWLING
+			WHERE DATE_FORMAT(EXECUTED_DATE, '%m-%d-%Y') = #{TODAY}
+		) AS RESULT
+	</select>
+	
+	<!-- 크롤링 완료 날짜 갱신 -->
+	<update id="updateCrawlingDate">
+		UPDATE
+		   CRAWLING
+		SET
+		   EXECUTED_DATE = NOW()
+		WHERE 
+		   DATE_FORMAT(EXECUTED_DATE, '%m-%d-%Y') = #{TODAY}
+	</update>
 </mapper>
