@@ -85,12 +85,16 @@ public class Crawler {
     		
     		// 코로나 CSV파일 내용을 읽어들인다
         	List<WorldDailyReport> info = execCrawling();
-        	// 국가 정보를 등록한다
-        	insertCountry(info);
-        	// 코로나 정보를 등록한다
-        	insertCsvData(info);
-        	// 크롤링 완료 날짜를 업데이트한다
-        	updateCrawlingDate(target_datetime);
+        	
+        	// 코로나 CSV파일을 취득했다면,
+        	if(!info.isEmpty() && info.size() > 0) {
+        		// 국가 정보를 등록한다
+        		insertCountry(info);
+        		// 코로나 정보를 등록한다
+        		insertCsvData(info);
+        		// 크롤링 완료 날짜를 업데이트한다
+        		updateCrawlingDate(target_datetime);
+        	}
     	}
     }
     
@@ -139,8 +143,8 @@ public class Crawler {
     		http.setRequestMethod("GET");
     		
     		// Response상태를 체크한다
-    		if (200 > http.getResponseCode() && http.getResponseCode() > 299) {
-    			logger.warn("Response 상태가 200번대가 아님");
+    		if (http.getResponseCode() != HttpURLConnection.HTTP_OK) {
+    			logger.warn("Response상태가 200번이 아님");
     			return result;
     		} 
     		// CSV파일의 내용을 읽어들인다 
