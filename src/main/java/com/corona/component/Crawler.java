@@ -144,7 +144,7 @@ public class Crawler {
     		
     		// Response상태를 체크한다
     		if (http.getResponseCode() != HttpURLConnection.HTTP_OK) {
-    			logger.warn("Response상태가 200번이 아님");
+    			logger.warn("CSV 파일이 아직 업로드 되지 않았음");
     			return result;
     		} 
     		// CSV파일의 내용을 읽어들인다 
