@@ -112,7 +112,7 @@
             if(cLength > 0) {
                 cArray = new Array(cLength);
                 for(var i = 0; i < cLength; i++) {
-                    cArray[i] = cField[i].textContent.replace(",", "");
+                    cArray[i] = cField[i].textContent.replace(/,/g, "");
                 }
             }
             
@@ -176,7 +176,7 @@
                         fontSize: '20'
                     },
                     responsive: true,
-                    maintainAspectRatio: false
+                    maintainAspectRatio: false,
                 }
             });
         });
