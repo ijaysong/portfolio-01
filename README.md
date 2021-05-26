@@ -10,9 +10,13 @@
 * SpringBoot 2.2.2
 * Java8
 * Apache Maven
+* MySQL 8.0.17
+* AWS
 
 ## URL
-https://corocoro.world
+~~https://corocoro.world~~  
+(해당 도메인은 더이상 코로나19 세계 감염 현황 프로젝트에서 사용하지 않습니다. [위시리스트 관리](https://github.com/ijaysong/wishlist-management) 프로젝트에서 사용 중입니다.)
+
 
 ## 메인화면
 ![메인화면1](./images/main1.png)
